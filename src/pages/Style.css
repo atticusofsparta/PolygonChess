@@ -1,3 +1,4 @@
+
 header{
     font-size: 56px;
     text-align: center;
@@ -7,7 +8,28 @@ h3{
     padding-bottom: 1em;
     border-bottom: 3px solid;
 }
-
 .largeText{
     font-size: large;
 }
+.contentContainer{
+    display: flex;
+    justify-content: center;
+   padding: 2em;
+}
+.howItWorks{
+    margin: auto;
+    padding: .5em;
+    border: 1px solid;
+    border-radius: 25px;
+    width: fit-content;
+}
+.noCasper{
+    margin: auto;
+    padding: .5em;
+    border: 1px solid;
+    border-radius: 25px;
+    overflow: auto;
+    width: fit-content;
+}
+
+
