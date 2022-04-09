@@ -41,41 +41,41 @@ function App() {
     textTotal_Games.textContent = `Total Games: ${total_games}`
   },[address, balance])
  
-  useEffect(()=>{
-    async function AccountInfo(){
-      const isConnected = await window.casperlabsHelper.isConnected()
-      const publicKey = await window.casperlabsHelper.getActivePublicKey();
-            setAddress(publicKey);
-           axios.post('http://localhost:6100/balance', {"publicKey": publicKey}).then((response) => {
-             const bal = response.data;
-             setBalance(bal)
-             console.log(bal)
-           }
-           )
-           axios.post('http://localhost:6100/getAccountinfo', {"publicKey": publicKey}).then((response) => {
-             const games = response.data;
-             setTotal_Games(games)
-             console.log(games)
-           }
-           )
+  // useEffect(()=>{
+  //   async function AccountInfo(){
+  //     const isConnected = await window.casperlabsHelper.isConnected()
+  //     const publicKey = await window.casperlabsHelper.getActivePublicKey();
+  //           setAddress(publicKey);
+  //          axios.post('http://localhost:6100/balance', {"publicKey": publicKey}).then((response) => {
+  //            const bal = response.data;
+  //            setBalance(bal)
+  //            console.log(bal)
+  //          }
+  //          )
+  //          axios.post('http://localhost:6100/getAccountinfo', {"publicKey": publicKey}).then((response) => {
+  //            const games = response.data;
+  //            setTotal_Games(games)
+  //            console.log(games)
+  //          }
+  //          )
              
       
-          }
-    var accountinfoint = setInterval(AccountInfo, 5000)
-    return accountinfoint;
+  //         }
+  //   var accountinfoint = setInterval(AccountInfo, 5000)
+  //   return accountinfoint;
     
       
-  },[])
+  // },[])
 
-  async function connect(){
-    try{Signer.sendConnectionRequest().then(console.log('connect'))
+  // async function connect(){
+  //   try{Signer.sendConnectionRequest().then(console.log('connect'))
     
-  } catch(error){console.log(error)}
+  // } catch(error){console.log(error)}
     
-  }
-  async function disconnect(){
-    try{Signer.disconnectFromSite().then(console.log('disconnect'));} catch(error){console.log(error)}
-  }
+  // }
+  // async function disconnect(){
+  //   try{Signer.disconnectFromSite().then(console.log('disconnect'));} catch(error){console.log(error)}
+  // }
 
   async function deploy() {}
   //   if (activeKey == null) { //Need to be connected to the Signer to continue
@@ -113,10 +113,10 @@ function App() {
       <ul className="navbar-nav me-auto">
         <Layout />
        <li className="nav-item">
-          <a className="nav-link" id="connectBtn" onClick={connect} >Connect Signer</a>
+          {/* <a className="nav-link" id="connectBtn" onClick={connect} >Connect Signer</a> */}
         </li>
         <li className="nav-item">
-          <a className="nav-link" id="disconnectBtn" onClick={disconnect} >Disconnect Signer</a>
+          {/* <a className="nav-link" id="disconnectBtn" onClick={disconnect} >Disconnect Signer</a> */}
         </li>
         <li className="nav-item">
           <a className="nav-link" id="deployBtn" onClick={deploy} >Save to Chain</a>

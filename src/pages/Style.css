@@ -1,0 +1,13 @@
+header{
+    font-size: 56px;
+    text-align: center;
+}
+h3{
+    text-align: center;
+    padding-bottom: 1em;
+    border-bottom: 3px solid;
+}
+
+.largeText{
+    font-size: large;
+}
