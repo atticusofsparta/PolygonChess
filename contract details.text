@@ -1,0 +1,211 @@
+ singleplayer contract:
+                    //key-value contract
+                    querying public key details returns:
+
+                 player_pubkey [ 
+                   accountInformation:{  
+                        totalGames::u512 : '#',
+                        wins:: u512 : '#',
+                        losses:: u512 : '#',
+                        stalemates:: u512 : '#'
+                    }
+                    gameHistory{
+                        gameID${#1}:{
+                            fenIDs:'[fen states in array, first to last]',
+                            moveLog: '[pawn to e4, etc]'
+                        },
+                        gameID${#2}:{
+                            fenIDs:'[fen states in array, first to last]',
+                            moveLog: '[pawn to e4, etc]'
+                        } // and so on
+                    }
+
+                    ]
+
+                    in contract, main dictionary with have:
+
+                    players_dict[
+
+                        [publicKey1: [accountinfo[scores]], [gameHistory[games]]
+                        ]
+
+                        [publicKey2: [accountinfo[scores]], [gameHistory[games]]
+                        ]
+                        
+                        ]
+////////////////////////////////
+
+multiplayer contract:
+                //key-value contract
+                querying public key details returns:
+
+                    [
+                    accountInformation:{  
+                        publicKey: '0x....',
+                        totalGames: '#',
+                        wins: '#',
+                        losses: '#',
+                        stalemates: '#'
+                    }
+                    gameHistory{
+                        gameID${#1}:{
+                            opponentPublicKey: '0x...',
+                            date; 'UTC date',
+                            fenIDs:'[fen states in array, first to last]',
+                            moveLog: '[pawn to e4, etc]',
+                            chatlog: '[
+                                {who, time, message},
+                                {who, time, message},
+                                {who, time, message}
+                            ]'
+                        },
+                        gameID${#2}:{
+                            opponentPublicKey: '0x...',
+                            date; 'UTC date',
+                            fenIDs:'[fen states in array, first to last]',
+                            moveLog: '[pawn to e4, etc]',
+                            chatlog: '[
+                                {who, time, message},
+                                {who, time, message},
+                                {who, time, message}
+                            ]'
+                        },// and so on
+                    }
+
+                    ]
+//////////////////////////////
+
+multiplayer with eco:
+
+            //players contract//
+
+                [
+                    accountInformation:{  
+                        publicKey: '0x....',
+                        totalGames: '#',
+                        wins: '#',
+                        losses: '#',
+                        stalemates: '#'
+                    }
+                    gameHistory{
+                        gameID${#1}:{
+                            opponentPublicKey: '0x...',
+                            date; 'UTC date',
+                            fenIDs:'[fen states in array, first to last]',
+                            moveLog: '[pawn to e4, etc]',
+                            chatlog: '[
+                                {who, time, message},
+                                {who, time, message},
+                                {who, time, message}
+                            ]'
+                        },
+                        gameID${#2}:{
+                            opponentPublicKey: '0x...',
+                            date; 'UTC date',
+                            fenIDs:'[fen states in array, first to last]',
+                            moveLog: '[pawn to e4, etc]',
+                            chatlog: '[
+                                {who, time, message},
+                                {who, time, message},
+                                {who, time, message}
+                            ]'
+                        },// and so on
+                    }
+
+                    ]
+
+            //erc20 contract//
+
+            simple erc20 contract with burn/mint function (burns when buys nft, 
+            mints when game is won) - erc20 contract has no burn function, need a burn
+            address or return token to smart contract.
+            game win = 5 coins.
+
+            //cep47 contract (nft)// ( must buy nfts, either with erc20 or cspr)
+            nfts as game pieces. Viewed as cards in a deck, the pieces are transfered when captured
+            in game to the opponent. *will require both players to sign a spending tnx at start of game*
+            picture shown as a rotating 2d image of the same style piece in dark/light colors.
+            can use game-cash erc20 to purchase nfts from contract in game shop. NFT pictures stored
+            in metadata as svg or bitmap string.
+
+//////////////////////////////
+
+nft exclusive holder game
+
+            //players/cep47 contract (nft account)// (only holders may play/must have coms)
+            //limit of 500 million, accounts CAN be burnt to allow for minting new ones
+
+            treasure map. The nft itself is the link to the users interface for the game. 
+            The login screen generates a uuid and mints the nft with the uuid as metadata, allowing
+            the user to access the system. The system checks the nft contract for the uuids registration
+            before it allows the players to continue. This also replaces the players account, and is
+            transferable.
+
+                [
+                    accountInformation:{  
+                        publicKey: '0x....',
+                        totalGames: '#',
+                        wins: '#',
+                        losses: '#',
+                        stalemates: '#'
+                    }
+                    gameHistory{
+                        gameID${#1}:{
+                            opponentPublicKey: '0x...',
+                            date; 'UTC date',
+                            fenIDs:'[fen states in array, first to last]',
+                            moveLog: '[pawn to e4, etc]',
+                            chatlog: '[
+                                {who, time, message},
+                                {who, time, message},
+                                {who, time, message}
+                            ]'
+                        },
+                        gameID${#2}:{
+                            opponentPublicKey: '0x...',
+                            date; 'UTC date',
+                            fenIDs:'[fen states in array, first to last]',
+                            moveLog: '[pawn to e4, etc]',
+                            chatlog: '[
+                                {who, time, message},
+                                {who, time, message},
+                                {who, time, message}
+                            ]'
+                        },// and so on
+                    }
+
+                    ]
+
+            //erc20 contract//
+
+            simple erc20 contract with burn/mint function (burns when buys nft, 
+            mints when game is won) - erc20 contract has no burn function, need a burn
+            address or return token to smart contract.
+            game win = 5 coins.
+
+            //cep47 contract (nft-skins)// ( must buy nfts, either with erc20 or cspr)
+
+            nfts as game pieces. Viewed as cards in a deck, the pieces are transfered when captured
+            in game to the opponent. *will require both players to sign a spending tnx at start of game*
+            picture shown as a rotating 2d image of the same style piece in dark/light colors.
+            can use game-cash erc20 to purchase nfts from contract in game shop
+
+///////////////////////////////
+
+nft marketplace
+
+            //Listings/ownership transfer contract//list, buy, and sell NFTs.
+            //Users must be able to trade any CEP-47, including game assets.
+            
+            need to assign permission to transfer_from (seller, buyer) to a smartcontract
+            this contract will also hold the listings under its own storage
+
+           
+/////////////////////////////
+
+game oracle
+
+            // just a key/value storage oracle that is read-only for board game pieces/cards
+            // that stores the svg or bitmap file.
+            // docs will include endpoints for all the files, and how to render them in browser
+

@@ -1,0 +1,15 @@
+priority:
+    deploy smart contract
+    create endpoints in server for saving to smart contract
+    create a transaction builder in app
+        - save user moves as a fen string on each move to session storage, as well as move-log
+        - save wins/losses/stalemates and add them up for total games
+        - 
+
+    add redis database session storage
+    add node-finder middleware to express server to select the best/functioning node  
+        --use CasperServiceByJsonRPC(getPeers)
+
+
+
+
