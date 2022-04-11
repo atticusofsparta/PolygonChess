@@ -34,7 +34,7 @@ const Home = () => {
           <div className="largeText">Dont have a Casper account?</div>
           <div>
             Download the Casper Signer extension{" "}
-            <a href={wallet} target="_blank" alt="">
+            <a href={wallet} target="_blank" rel="noopener noreferrer" alt="">
               here
             </a>
           </div>
