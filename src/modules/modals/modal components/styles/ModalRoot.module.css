@@ -1,8 +1,8 @@
 .modalRoot {
     position: fixed;
     top: 0;
-    z-index: 100;
-    width: 100vw;
-    height: 100vh;
+    z-index: 1009999999999;
+    width: 500vw;
+    height: 50vh;
     background-color: rgba(1, 1, 1, 0.2);
   }

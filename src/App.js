@@ -21,6 +21,8 @@ import Nopage from "./pages/Nopage";
 import Game from "./pages/Game";
 import Layout from "./pages/Layout";
 import axios from "axios";
+import ModalRoot from "./modules/modals/modal components/ModalRoot";
+import ModalService from "./modules/modals/modal components/ModalService";
 
 const apiUrl = "http://localhost:6100/api";
 const casperService = new CasperServiceByJsonRPC(apiUrl);
