@@ -10,18 +10,24 @@ h3{
 }
 .largeText{
     font-size: large;
+    text-align: center;
+    text-decoration: underline;
+    padding: 2em;
+    line-height: 2em;
 }
 .contentContainer{
     display: flex;
     justify-content: center;
    padding: 2em;
+   line-height: 2em;
 }
 .howItWorks{
     margin: auto;
     padding: .5em;
     border: 1px solid;
     border-radius: 25px;
-    width: fit-content;
+    max-width: 30%;
+    line-height: 2em;
 }
 .noCasper{
     margin: auto;
@@ -29,7 +35,36 @@ h3{
     border: 1px solid;
     border-radius: 25px;
     overflow: auto;
-    width: fit-content;
+    max-width: 30%;
+    line-height: 2em;
+}
+.chessRulesContainer{
+    border: 1px solid;
+    border-radius: 25px;
+    max-width: 75%;
+    margin: auto;
+    padding: 2em;
+    line-height: 2em;
+}
+.bottomContainer{
+    display: flex;
+}
+.specialMovesContainer{
+    border: 1px solid;
+    border-radius: 25px;
+    padding: 2em;
+    line-height: 2em;
+    max-width: 30%;
+    margin: auto;
+    max-height: fit-content;
+}
+.objectiveContainer{
+    border: 1px solid;
+    border-radius: 25px;
+    padding: 2em;
+    line-height: 2em;
+    max-width: 30%;
+    margin: auto; 
 }
 
 
