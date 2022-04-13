@@ -81,11 +81,12 @@ window.onunhandledrejection = globalPromiseRejectionHandler;
     async function AccountInfo() {
       const isConnected = await window.casperlabsHelper.isConnected();
       const publicKey = await window.casperlabsHelper.getActivePublicKey();
-      if(publicKey)
-      {setAddress(publicKey);
-        // console.log(publicKey)
-      }
-else{setAddress("0186ac6f83c5bcca34f68ea7cc82f3917ccc10ad3eac96d5ad2b1dbeb0b6c02fa9")}
+      
+      setAddress(publicKey);
+        ModalService.userKey = publicKey
+         console.log(ModalService.userKey)
+      
+
       
 
       axios

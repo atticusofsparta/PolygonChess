@@ -5,13 +5,15 @@ import NFTCheck from '../modules/randomFunctions/NFTCheck';
 
 import { Chessboard } from 'react-chessboard';
 import ModalService from '../modules/modals/modal components/ModalService';
+import AddModal from '../modules/modals/modal components/AddModal';
+import LoadingModal from '../modules/modals/modal files/LoadingModal';
 
 export default function Game({ boardWidth }) {
     const chessboardRef = useRef();
     const [game, setGame] = useState(new Chess());
     const [boardOrientation, setBoardOrientation] = useState('white');
     const [currentTimeout, setCurrentTimeout] = useState(undefined);
-const hasNFT = false
+
     function safeGameMutate(modify) {
       setGame((g) => {
         const update = { ...g };
@@ -75,7 +77,13 @@ const hasNFT = false
     }
     
     //////chessborder is rendered
-    
+    const [hasNFT, setHasNFT] = useState(false);
+    useEffect(() => {
+      console.log(hasNFT)
+      setHasNFT(ModalService.hasNFT)
+     console.log(hasNFT)
+    }, [ModalService.hasNFT]);
+    AddModal(LoadingModal)
 if(hasNFT)
 
     {return (
@@ -128,7 +136,7 @@ if(hasNFT)
     if(!hasNFT){
       return(
         <div><div>Get the freaking NFT</div>
-        <button onClick={()=>NFTCheck()}>Get NFT</button></div>
+        <button onClick={()=>NFTCheck()}>Get NFT</button><div>{hasNFT}</div></div>
       )
     }
   }

@@ -20,6 +20,9 @@ export default function ModalRoot() {
           setModal({});
         },
       });
+    })
+    ModalService.on('close', ({}) => {
+      setModal({})
     });
   }, []);
 
