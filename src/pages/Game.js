@@ -73,8 +73,10 @@ export default function Game({ boardWidth }) {
     }
 
     //////chessborder is rendered
+  const hasNFT = true  
+if(hasNFT)
 
-    return (
+    {return (
         <div id="gameContainer">
       <div id="boardContainer">
         <Chessboard
@@ -120,7 +122,12 @@ export default function Game({ boardWidth }) {
 
       </div>
       
-    );
+    );}
+    if(!hasNFT){
+      return(
+        <div>Get the freaking NFT</div>
+      )
+    }
   }
   /**
    *  

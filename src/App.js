@@ -83,7 +83,7 @@ window.onunhandledrejection = globalPromiseRejectionHandler;
       const publicKey = await window.casperlabsHelper.getActivePublicKey();
       if(publicKey)
       {setAddress(publicKey);
-        console.log(publicKey)
+        // console.log(publicKey)
       }
 else{setAddress("0186ac6f83c5bcca34f68ea7cc82f3917ccc10ad3eac96d5ad2b1dbeb0b6c02fa9")}
       
@@ -151,6 +151,7 @@ else{setAddress("0186ac6f83c5bcca34f68ea7cc82f3917ccc10ad3eac96d5ad2b1dbeb0b6c02
 
   return (
     <div>
+      <ModalRoot/>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
           <a className="navbar-brand" href="/Home">
