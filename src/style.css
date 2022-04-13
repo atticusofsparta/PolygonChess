@@ -2,7 +2,7 @@
 
 #connectBtn{
  
- 
+ cursor: pointer;
 
 }
 #connectBtn:hover{
@@ -10,13 +10,13 @@
   
 }
 #disconnectBtn{
-
+cursor: pointer;
 }
 #disconnectBtn:hover{
   
 }
 #deployBtn{
-
+cursor: pointer;
 }
 #deployBtn:hover{
   

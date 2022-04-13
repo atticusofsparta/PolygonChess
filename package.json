@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "apicache": "^1.6.3",
     "axios": "^0.26.1",
+    "casper-cep47-js-client": "^1.0.1",
     "casper-js-sdk": "^2.9.1",
     "chess.js": "^0.12.1",
     "cors": "^2.8.5",
