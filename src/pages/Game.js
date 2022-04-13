@@ -1,15 +1,17 @@
 import React, {useEffect, useRef, useState } from 'react';
 import Chess from 'chess.js';
 import '../style.css';
+import NFTCheck from '../modules/randomFunctions/NFTCheck';
 
 import { Chessboard } from 'react-chessboard';
+import ModalService from '../modules/modals/modal components/ModalService';
 
 export default function Game({ boardWidth }) {
     const chessboardRef = useRef();
     const [game, setGame] = useState(new Chess());
     const [boardOrientation, setBoardOrientation] = useState('white');
     const [currentTimeout, setCurrentTimeout] = useState(undefined);
-  
+const hasNFT = false
     function safeGameMutate(modify) {
       setGame((g) => {
         const update = { ...g };
@@ -71,9 +73,9 @@ export default function Game({ boardWidth }) {
             <div id="fenlogger"></div>
         )
     }
-
+    
     //////chessborder is rendered
-  const hasNFT = true  
+    
 if(hasNFT)
 
     {return (
@@ -125,7 +127,8 @@ if(hasNFT)
     );}
     if(!hasNFT){
       return(
-        <div>Get the freaking NFT</div>
+        <div><div>Get the freaking NFT</div>
+        <button onClick={()=>NFTCheck()}>Get NFT</button></div>
       )
     }
   }
