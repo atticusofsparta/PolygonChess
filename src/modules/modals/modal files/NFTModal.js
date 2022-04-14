@@ -1,26 +1,24 @@
-import "./styles.loading.css";
 import React from "react";
 import Modal from "../modal components/Modal";
 import ModalBody from "../modal components/ModalBody";
 import ModalHeader from "../modal components/ModalHeader";
 import ModalFooter from "../modal components/ModalFooter";
 import CloseModal from "../modal components/CloseModal";
-import ModalService from "../modal components/ModalService";
+import NFTCheck from "../../randomFunctions/NFTCheck";
 
-export default function LoadingModal(props) {
-    ModalService.popped = true
+export default function NFTModal(props) {
   return (
     <Modal>
       <ModalHeader>
-        <h3 className="loadingHeader">Finding Lobby</h3>
+        <h3>Get an NFT</h3>
       </ModalHeader>
       <ModalBody>
-        <div>Looking for match</div>
-        <div>You will be connected to an opponent shortly</div>
+        <p>You need one of our NFTs in order to play this game. Mint one using the button below</p>
+      <button onClick={NFTCheck} className="btn btn-primary">NFT CHeck</button>
       </ModalBody>
       <ModalFooter>
-      <button onClick={()=> CloseModal() } className="btn btn-primary">Close Modal</button>
-           </ModalFooter>
+        <button onClick={ CloseModal } className="btn btn-primary">Close Modal</button>
+      </ModalFooter>
     </Modal>
   );
 }
