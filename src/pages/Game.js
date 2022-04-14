@@ -77,16 +77,16 @@ export default function Game({ boardWidth }) {
     }
     
     //////chessborder is rendered
-    const [hasNFT, setHasNFT] = useState(false);
+    const [hasNFT, setHasNFT] = useState(true);
     useEffect(() => {
       console.log(hasNFT)
       setHasNFT(ModalService.hasNFT)
      console.log(hasNFT)
     }, [ModalService.hasNFT]);
-    AddModal(LoadingModal)
-if(hasNFT)
+   if(!ModalService.popped) {AddModal(LoadingModal)}
 
-    {return (
+
+   return (
         <div id="gameContainer">
       <div id="boardContainer">
         <Chessboard
@@ -104,6 +104,7 @@ if(hasNFT)
         />
         <FenLogger />
         </div>
+        <br/>
           <div id="boardBtnContainer"> <button id="boardBtn"
           className="rc-button"
           onClick={() => {
@@ -133,13 +134,8 @@ if(hasNFT)
       </div>
       
     );}
-    if(!hasNFT){
-      return(
-        <div><div>Get the freaking NFT</div>
-        <button onClick={()=>NFTCheck()}>Get NFT</button><div>{hasNFT}</div></div>
-      )
-    }
-  }
+    
+  
   /**
    *  
    */

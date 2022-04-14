@@ -5,8 +5,10 @@ import ModalBody from "../modal components/ModalBody";
 import ModalHeader from "../modal components/ModalHeader";
 import ModalFooter from "../modal components/ModalFooter";
 import CloseModal from "../modal components/CloseModal";
+import ModalService from "../modal components/ModalService";
 
 export default function LoadingModal(props) {
+    ModalService.popped = true
   return (
     <Modal>
       <ModalHeader>
