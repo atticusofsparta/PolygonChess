@@ -139,15 +139,15 @@ window.onunhandledrejection = globalPromiseRejectionHandler;
       history: CLValueBuilder.u512(history),
     });
 
-    // const pubkey = CLPublicKey.fromHex(activeKey); //Build CLPublicKey from hex representation of public key
-    // contract.setContractHash(singleplayer_contract); //Sets the contract hash of the Contract instance. The hash of our highscore contract
-    //const result = contract.callEntrypoint("add_game", args, pubkey, "casper-test", csprToMotes(1).toString(), [], 10000000); //Builds a Deploy object at add_highscore entrypoint
-    //const deployJSON = DeployUtil.deployToJson(result);
-    // Signer.sign(deployJSON, activeKey).then((success) => { //Initiates sign request
-    //  sendDeploy(success);
-    // }).catch((error) => {
-    //   console.log(error);
-    // });
+  //   const pubkey = CLPublicKey.fromHex(activeKey); //Build CLPublicKey from hex representation of public key
+  //   contract.setContractHash(singleplayer_contract); //Sets the contract hash of the Contract instance. The hash of our highscore contract
+  //   const result = contract.callEntrypoint("add_game", args, pubkey, "casper-test", csprToMotes(1).toString(), [], 10000000); //Builds a Deploy object at add_highscore entrypoint
+  //   const deployJSON = DeployUtil.deployToJson(result);
+  //   Signer.sign(deployJSON, activeKey).then((success) => { //Initiates sign request
+  //    sendDeploy(success);
+  //   }).catch((error) => {
+  //     console.log(error);
+  //   });
   }
 
   return (
