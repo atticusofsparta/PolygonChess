@@ -1,19 +1,63 @@
+
 import React, {useEffect, useRef, useState } from 'react';
 import Chess from 'chess.js';
 import '../style.css';
-import NFTCheck from '../modules/randomFunctions/NFTCheck';
-
 import { Chessboard } from 'react-chessboard';
+
+import NFTCheck from '../modules/randomFunctions/NFTCheck';
 import ModalService from '../modules/modals/modal components/ModalService';
 import AddModal from '../modules/modals/modal components/AddModal';
 import LoadingModal from '../modules/modals/modal files/LoadingModal';
 
-export default function Game({ boardWidth }) {
+
+
+export default function Game({ gametoapp }, { boardWidth }) {
     const chessboardRef = useRef();
     const [game, setGame] = useState(new Chess());
     const [boardOrientation, setBoardOrientation] = useState('white');
     const [currentTimeout, setCurrentTimeout] = useState(undefined);
 
+    //score logic
+    const [win, setWin] = useState()
+    const [stalemate, setStalemate] = useState()
+    const [gameResult, setGameResult] = useState("")
+ 
+    
+    useEffect(()=>{
+      //win/loss
+      if (game.in_checkmate() === true) {
+        let playerInCheckmate = game.turn()
+        if (playerInCheckmate === "b") {
+          setWin(true)
+          console.log("white wins")
+        }
+        if (playerInCheckmate === "w") {
+          setWin(false)
+          console.log("black wins")
+        }
+  
+        console.log(`${playerInCheckmate} in checkmate`)
+      }
+  //stalemate
+      if (game.in_stalemate() | game.in_draw() === true) {
+
+        setStalemate(true)
+      
+        console.log("in stalemate ", stalemate)
+      }
+
+    },[game])
+
+    //send gameresult to app.js
+    useEffect(()=>{
+      if (win === true){setGameResult("win")}
+      if (win === false){setGameResult("loss")}
+      if (stalemate === true){setGameResult("stalemate")}
+      if (gameResult === "win" ||  gameResult ===  "loss" || gameResult === "stalemate") {gametoapp(gameResult)}
+    },[game, win, stalemate, gameResult])
+    
+    
+  
     function safeGameMutate(modify) {
       setGame((g) => {
         const update = { ...g };
@@ -56,13 +100,17 @@ export default function Game({ boardWidth }) {
   
     function FenLogger (){
 
+     
+
         //initialize move content
         useEffect(()=>{
+            
             const newMove = game.history()
             const parseMove = JSON.stringify(newMove)
             const logMove = parseMove
           if (null) { document.getElementById('fenlogger').innerHTML = 'Make a move...' }
         else {document.getElementById('fenlogger').innerHTML = logMove}
+        
        },[])
        
          // returns json
@@ -73,69 +121,71 @@ export default function Game({ boardWidth }) {
        
         return (
             <div id="fenlogger"></div>
+            
         )
     }
-    
-    //////chessborder is rendered
-    const [hasNFT, setHasNFT] = useState(true);
-    useEffect(() => {
+
+     //////chessborder is rendered
+     const [hasNFT, setHasNFT] = useState(true);
+     useEffect(() => {
+       console.log(hasNFT)
+       setHasNFT(true)
       console.log(hasNFT)
-      setHasNFT(ModalService.hasNFT)
-     console.log(hasNFT)
-    }, [ModalService.hasNFT]);
-   if(!ModalService.popped) {AddModal(LoadingModal)}
-
-
-   return (
-        <div id="gameContainer">
-      <div id="boardContainer">
-        <Chessboard
-          id="myboard"
-          animationDuration={200}
-          boardOrientation={boardOrientation}
-          boardWidth={boardWidth}
-          position={game.fen()}
-          onPieceDrop={onDrop}
-          customBoardStyle={{
-            borderRadius: '4px',
-            boxShadow: '0 5px 15px rgba(0, 0, 0, 0.5)'
-          }}
-          ref={chessboardRef}
-        />
-        <FenLogger />
-        </div>
-        <br/>
-          <div id="boardBtnContainer"> <button id="boardBtn"
-          className="rc-button"
-          onClick={() => {
-            safeGameMutate((game) => {
-              game.reset();
-            });
-            // stop any current timeouts
-            clearTimeout(currentTimeout);
-          }}
-        >
-          reset
-        </button>
-
-        <button id="boardBtn"
-          className="rc-button"
-          onClick={() => {
-            safeGameMutate((game) => {
-              game.undo();
-            });
-            // stop any current timeouts
-            clearTimeout(currentTimeout);
-          }}
-        >
-          undo
-        </button></div>
-
-      </div>
-      
-    );}
-    
-  
-  /**
-   *  
-   */
+     }, [ModalService.hasNFT]);
+     if(!ModalService.popped) {AddModal(LoadingModal)}
+ if(hasNFT)
+ 
+     {return (
+         <div id="gameContainer">
+       <div id="boardContainer">
+         <Chessboard
+           id="myboard"
+           animationDuration={200}
+           boardOrientation={boardOrientation}
+           boardWidth={boardWidth}
+           position={game.fen()}
+           onPieceDrop={onDrop}
+           customBoardStyle={{
+             borderRadius: '4px',
+             boxShadow: '0 5px 15px rgba(0, 0, 0, 0.5)'
+           }}
+           ref={chessboardRef}
+         />
+         <FenLogger />
+         </div>
+           <div id="boardBtnContainer"> <button id="boardBtn"
+           className="rc-button"
+           onClick={() => {
+             safeGameMutate((game) => {
+               game.reset();
+             });
+             // stop any current timeouts
+             clearTimeout(currentTimeout);
+           }}
+         >
+           reset
+         </button>
+ 
+         <button id="boardBtn"
+           className="rc-button"
+           onClick={() => {
+             safeGameMutate((game) => {
+               game.undo();
+             });
+             // stop any current timeouts
+             clearTimeout(currentTimeout);
+           }}
+         >
+           undo
+         </button></div>
+ 
+       </div>
+       
+     );}
+     if(!hasNFT){
+       return(
+         <div><div>Get the freaking NFT</div>
+         <button onClick={()=>NFTCheck()}>Get NFT</button><div>{hasNFT}</div></div>
+       )
+     }
+   }
