@@ -11895,3 +11895,6 @@ legend {
 .list-group-item-action:hover {
   background-color: #23272b;
 }
+.superHigh{
+  z-index: 1001;
+}

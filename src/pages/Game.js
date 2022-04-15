@@ -10,11 +10,27 @@ import AddModal from '../modules/modals/modal components/AddModal';
 import LoadingModal from '../modules/modals/modal files/LoadingModal';
 import CloseModal from '../modules/modals/modal components/CloseModal';
 import NFTModal from '../modules/modals/modal files/NFTModal';
+import Won from '../modules/modals/modal files/Won';
+import Lost from '../modules/modals/modal files/Lost';
+import Draw from '../modules/modals/modal files/Draw';
+
+
+
+
+import Modal from '../modules/modals/modal components/Modal';
+import ModalBody from '../modules/modals/modal components/ModalBody';
+import ModalHeader from '../modules/modals/modal components/ModalHeader';
+import ModalFooter from '../modules/modals/modal components/ModalFooter';
+
+
+
+
+
 
 
 
 export default function Game({ gametoapp }, { boardWidth }) {
-  CloseModal()
+  
     const chessboardRef = useRef();
     const [game, setGame] = useState(new Chess());
     const [boardOrientation, setBoardOrientation] = useState('white');
@@ -25,18 +41,41 @@ export default function Game({ gametoapp }, { boardWidth }) {
     const [stalemate, setStalemate] = useState()
     const [gameResult, setGameResult] = useState("")
  
+
+    function Draws( props) {
+      function closing(){CloseModal()
+       game.reset()
+     }
+     
+       return (
+         <Modal>
+           <ModalHeader>
+             <h3>So Close</h3>
+           </ModalHeader>
+           <ModalBody>
+             <p>This game is a draw</p>
+           </ModalBody>
+           <ModalFooter>
+             <button onClick={ closing } className="btn btn-primary">OK</button>
+           </ModalFooter>
+         </Modal>
+       );
+     }
     
     useEffect(()=>{
       //win/loss
+      ModalService.game = game
       if (game.in_checkmate() === true) {
         let playerInCheckmate = game.turn()
         if (playerInCheckmate === "b") {
           setWin(true)
           console.log("white wins")
+          
         }
         if (playerInCheckmate === "w") {
           setWin(false)
           console.log("black wins")
+          
         }
   
         console.log(`${playerInCheckmate} in checkmate`)
@@ -47,15 +86,16 @@ export default function Game({ gametoapp }, { boardWidth }) {
         setStalemate(true)
       
         console.log("in stalemate ", stalemate)
+        
       }
 
     },[game])
 
     //send gameresult to app.js
     useEffect(()=>{
-      if (win === true){setGameResult("win")}
-      if (win === false){setGameResult("loss")}
-      if (stalemate === true){setGameResult("stalemate")}
+      if (win === true){setGameResult("win");AddModal(Won); game.reset()}
+      if (win === false){setGameResult("loss");AddModal(Lost)}
+      if (stalemate === true){setGameResult("stalemate");AddModal(Draw)}
       if (gameResult === "win" ||  gameResult ===  "loss" || gameResult === "stalemate") {gametoapp(gameResult)}
     },[game, win, stalemate, gameResult])
     
@@ -129,12 +169,7 @@ export default function Game({ gametoapp }, { boardWidth }) {
     }
 
      //////chessborder is rendered
-     const [hasNFT, setHasNFT] = useState("0");
-     useEffect(() => {
-       console.log(hasNFT)
-       setHasNFT(ModalService.nftBalance)
-      console.log(hasNFT)
-     }, [ModalService.nftBalance]);
+     var hasNFT = ModalService.nftBalance
      
      if(hasNFT < 1){AddModal(NFTModal)}
      if(!hasNFT < 1)
@@ -177,15 +212,19 @@ export default function Game({ gametoapp }, { boardWidth }) {
            onClick={() => {
              safeGameMutate((game) => {
                game.undo();
+               
              });
              // stop any current timeouts
              clearTimeout(currentTimeout);
            }}
          >
            undo
-         </button></div>
+         </button>
+         <button onClick={()=>AddModal(Draws)}>click</button>
+         </div>
  
        </div>
        
      );
+     
    }

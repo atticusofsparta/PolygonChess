@@ -56,7 +56,7 @@ function App() {
    const [address, setAddress] = useState("?");
 
   //account game detals
-  const [nftBalance, setNftBalance] = useState(0);
+  const [nftBalance, setNftBalance] = useState(1);
   const [total_games, setTotal_Games] = useState(0);
   const [wins, setWins] = useState(0);
   const [losses, setLosses] = useState(0);
@@ -110,7 +110,6 @@ function App() {
   const textLosses = document.getElementById('textLosses');
   const textStalemates = document.getElementById('textStalemates');
   textNft.textContent = `Nft: ${nftBalance}`;
-  ModalService.nftBalance = nftBalance
   textAddress.textContent = `Connected account: ${address.replace(address.slice(5, 61), ' . . . ')}`;
   textBalance.textContent = `CSPR Balance: ${balance / 1000000000}`;
   textTotal_Games.textContent = `Total Games: ${total_games}` + ` + ${sessionGames}`;
@@ -119,7 +118,20 @@ function App() {
   textStalemates.textContent = `Stalemates: ${stalemates}` + ` + ${sessionStalemates}`;
 },[address, balance, total_games, wins, losses, stalemates, sessionGames, sessionWins, sessionLosses, sessionStalemates, nftBalance])
 
+useEffect(()=>{
+  ModalService.nftBalance = nftBalance;
+  ModalService.address = address;
+  ModalService.balance = balance;
+  ModalService.total_games = total_games;
+  ModalService.wins = wins;
+  ModalService.losses = losses;
+  ModalService.stalemates = stalemates;
+  ModalService.sessionGames = sessionGames;
+  ModalService.sessionWins = sessionWins;
+  ModalService.sessionLosses = sessionLosses;
+  ModalService.sessionStalemates = sessionStalemates;
 
+},[address, balance, total_games, wins, losses, stalemates, sessionGames, sessionWins, sessionLosses, sessionStalemates, nftBalance])
  //get  account data from server
  useEffect(()=>{
   async function AccountInfo(){
@@ -181,6 +193,7 @@ ModalService.hasNft = (nftBalance)
     }
   }
   async function mint() {
+   
     const recipientKey = CLPublicKey.fromHex(address);
     const token_ids = new CLList([new CLU256(1)]);
     const token_meta1 = new CLMap([[new CLString("a"), new CLString("aa")]]);
@@ -298,7 +311,7 @@ axios.get("http://localhost:6100/getDeploy", { //Sends request to /getDeploy end
       <ModalRoot/>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
-          <a className="navbar-brand" href="/Home">
+          <a className="navbar-brand" href="/">
             Casper Chess
           </a>
 
