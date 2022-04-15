@@ -9,7 +9,7 @@ import CloseModal from "../modal components/CloseModal";
 export default function Cover(props) {
   return (
       
-    <Modal className="modal">
+    <Modal>
      
     </Modal>
    

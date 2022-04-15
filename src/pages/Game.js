@@ -8,10 +8,12 @@ import NFTCheck from '../modules/randomFunctions/NFTCheck';
 import ModalService from '../modules/modals/modal components/ModalService';
 import AddModal from '../modules/modals/modal components/AddModal';
 import LoadingModal from '../modules/modals/modal files/LoadingModal';
+import CloseModal from '../modules/modals/modal components/CloseModal';
 
 
 
 export default function Game({ gametoapp }, { boardWidth }) {
+  CloseModal()
     const chessboardRef = useRef();
     const [game, setGame] = useState(new Chess());
     const [boardOrientation, setBoardOrientation] = useState('white');
