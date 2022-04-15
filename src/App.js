@@ -41,6 +41,7 @@ const singleplayer_contract =
   "hash-e951e1ca48071ebda74eed2295a2dc34ba5241bb533be9062fc9de84eda45c12";
 
 function App() {
+  
   const [score, setScore] = useState("");
   const gametoapp = (gameResult) => {
     if (gameResult === "win"){setScore("win")}

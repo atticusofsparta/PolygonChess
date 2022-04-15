@@ -129,16 +129,18 @@ export default function Game({ gametoapp }, { boardWidth }) {
     }
 
      //////chessborder is rendered
-     const [hasNFT, setHasNFT] = useState(true);
+     const [hasNFT, setHasNFT] = useState("0");
      useEffect(() => {
        console.log(hasNFT)
-       setHasNFT(true)
+       setHasNFT(ModalService.nftBalance)
       console.log(hasNFT)
-     }, [ModalService.hasNFT]);
+     }, [ModalService.nftBalance]);
      
-     if(ModalService.nftBalance < 1){AddModal(NFTModal)}
-     if(!ModalService.nftBalance < 1)
-{if(!ModalService.popped) {AddModal(LoadingModal)}}
+     if(hasNFT < 1){AddModal(NFTModal)}
+     if(!hasNFT < 1)
+{
+  if(!ModalService.popped) {AddModal(LoadingModal)}
+}
        return (
          <div id="gameContainer">
        <div id="boardContainer">
