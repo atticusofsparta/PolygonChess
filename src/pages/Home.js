@@ -1,9 +1,11 @@
 import React from "react";
+import ModalService from "../modules/modals/modal components/ModalService";
 import "./Style.css";
 
 const Home = () => {
   const wallet =
     "https://chrome.google.com/webstore/detail/casper-signer/djhndpllfiibmcdbnmaaahkhchcoijce";
+    ModalService.popped = false
   return (
     <div>
       <header>Welcome to Casper Chess</header>
