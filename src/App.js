@@ -109,6 +109,7 @@ function App() {
   const textLosses = document.getElementById('textLosses');
   const textStalemates = document.getElementById('textStalemates');
   textNft.textContent = `Nft: ${nftBalance}`;
+  ModalService.nftBalance = nftBalance
   textAddress.textContent = `Connected account: ${address.replace(address.slice(5, 61), ' . . . ')}`;
   textBalance.textContent = `CSPR Balance: ${balance / 1000000000}`;
   textTotal_Games.textContent = `Total Games: ${total_games}` + ` + ${sessionGames}`;

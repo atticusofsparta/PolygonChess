@@ -13,9 +13,8 @@ export default function NFTModal(props) {
         <h3>Get an NFT</h3>
       </ModalHeader>
       <ModalBody>
-        <p>You need one of our NFTs in order to play this game. Mint one using the button below</p>
-      <button onClick={NFTCheck} className="btn btn-primary">NFT CHeck</button>
-      </ModalBody>
+        <p>You need one of our NFTs in order to play this game. Mint one using the button above</p>
+            </ModalBody>
       <ModalFooter>
         <button onClick={ CloseModal } className="btn btn-primary">Close Modal</button>
       </ModalFooter>

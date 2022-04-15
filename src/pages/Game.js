@@ -9,6 +9,7 @@ import ModalService from '../modules/modals/modal components/ModalService';
 import AddModal from '../modules/modals/modal components/AddModal';
 import LoadingModal from '../modules/modals/modal files/LoadingModal';
 import CloseModal from '../modules/modals/modal components/CloseModal';
+import NFTModal from '../modules/modals/modal files/NFTModal';
 
 
 
@@ -134,10 +135,11 @@ export default function Game({ gametoapp }, { boardWidth }) {
        setHasNFT(true)
       console.log(hasNFT)
      }, [ModalService.hasNFT]);
-     if(!ModalService.popped) {AddModal(LoadingModal)}
- if(hasNFT)
- 
-     {return (
+     
+     if(ModalService.nftBalance < 1){AddModal(NFTModal)}
+     if(!ModalService.nftBalance < 1)
+{if(!ModalService.popped) {AddModal(LoadingModal)}}
+       return (
          <div id="gameContainer">
        <div id="boardContainer">
          <Chessboard
@@ -183,11 +185,5 @@ export default function Game({ gametoapp }, { boardWidth }) {
  
        </div>
        
-     );}
-     if(!hasNFT){
-       return(
-         <div><div>Get the freaking NFT</div>
-         <button onClick={()=>NFTCheck()}>Get NFT</button><div>{hasNFT}</div></div>
-       )
-     }
+     );
    }
