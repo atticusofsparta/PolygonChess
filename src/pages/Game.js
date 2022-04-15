@@ -44,7 +44,9 @@ export default function Game({ gametoapp }, { boardWidth }) {
 
     function Draws( props) {
       function closing(){CloseModal()
-       game.reset()
+        safeGameMutate((game) => {
+          game.reset();
+        });
      }
      
        return (
