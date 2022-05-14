@@ -28,76 +28,108 @@ import Layout from "./pages/Layout";
 import axios from "axios";
 import ModalRoot from "./modules/modals/modal components/ModalRoot";
 import ModalService from "./modules/modals/modal components/ModalService";
+import immer from "immer";
+
 var getDeployInterval = null;
 
 
 const apiUrl = "http://localhost:6100/api";
-const casperService = new CasperServiceByJsonRPC(apiUrl);
-const casperClient = new CasperClient(apiUrl);
 const client = new CasperClient(apiUrl);
 const contract = new Contracts.Contract(client);
 const nftcontracthash = "hash-ec5deac7aa9f869c22d5628f1082a545d98daa6ef6289f414d655d77f4ff3e77";
-const singleplayer_contract =
-  "hash-e951e1ca48071ebda74eed2295a2dc34ba5241bb533be9062fc9de84eda45c12";
+const singleplayer_contract = "hash-6f978f1bd5d7071d464fa3c4fe72f5c4d7aedbad6b558402ccf5d7aecbfd915b";
 
-function App() {
-  const [score, setScore] = useState("");
-  const gametoapp = (gameResult) => {
+let initialCurrentGameState = {
+          Name: '',
+          Chat: '',
+          Timer: '',
+          Details: '',
+          playerColor: '',
+          opponentSocket: '',
+          opponentColor: ''
+}
+
+function App({socket}) {
+
+    //connected account details
+    const [balance, setBalance] = useState("?");
+    const [address, setAddress] = useState("?");
+    const [isConnected, setIsConnected] = useState(false);
+  
+ 
+   //account game detals
+   const [nftBalance, setNftBalance] = useState(0);
+   const [total_games, setTotal_Games] = useState(0);
+   const [wins, setWins] = useState(0);
+   const [losses, setLosses] = useState(0);
+   const [stalemates, setStalemates] = useState(0);
+ 
+   //session game details
+   const [sessionGames, setSessionGames] = useState(0)
+   const [sessionWins, setSessionWins] = useState(0)
+   const [sessionLosses, setSessionLosses] = useState(0)
+   const [sessionStalemates, setSessionStalemates] = useState(0)  
+
+  ///socket stuff
+  const [username, setUsername] = useState(''); // user settable username
+  const [connected, setConnected] = useState(false);
+  const [allUsers, setAllUsers] = useState([]); // all users on server
+  const [gameList, setGameList] = useState({}); // all games on server
+  const [lobbyList, setLobbyList] = useState(["General"]); // all lobbies on server
+  const [connectedRooms, setConnectedRooms] = useState(["General"]); // lobbies user has connected to
+  const [activeLobby, setActiveLobby] = useState('General'); // current lobby user is in
+  const [inGame, setInGame] = useState(false); // conditional for rendering chessboard or dashboard
+  const [currentGame, setCurrentGame] = useState(initialCurrentGameState) // sets data for current game user is in
+  const [message, setMessage] = useState(''); // message input state
+  const [messages, setMessages] = useState({General: [], Spanish: []}); // all messages from server
+ 
+
+
+
+socket.on('user list', users =>{
+  setAllUsers(users)
+})
+socket.on('lobby list', lobbies => {
+  setLobbyList(lobbies)
+})
+socket.on('game list', games => {
+  
+  setGameList(games)
+  console.log("game list: ", gameList)
+})
+socket.on('start game', (opponent) => {
+  let newopponent = immer(currentGame, draft => {
+    draft.opponentSocket = opponent;
+  })
+  setCurrentGame(newopponent)
+  console.log(opponent, "is black")
+})
+
+useEffect(()=>{
+  socket.emit('join server', address)
+},[address])
+  
+
+
+  const [score, setScore] = useState();
+  let gametoapp = (gameResult) => {
+    
+    if (gameResult === "") {setScore("")}
     if (gameResult === "win"){setScore("win")}
     if (gameResult === "loss"){setScore("loss")}
     if (gameResult === "stalemate"){setScore("stalemate")}
+    
     console.log("gameResult", gameResult)
 
   }
-  
-   //connected account details
-   const [balance, setBalance] = useState("?");
-   const [address, setAddress] = useState("?");
-
-  //account game detals
-  const [nftBalance, setNftBalance] = useState(0);
-  const [total_games, setTotal_Games] = useState(0);
-  const [wins, setWins] = useState(0);
-  const [losses, setLosses] = useState(0);
-  const [stalemates, setStalemates] = useState(0);
-
-  //session game details
-  const [sessionGames, setSessionGames] = useState(0)
-  const [sessionWins, setSessionWins] = useState(0)
-  const [sessionLosses, setSessionLosses] = useState(0)
-  const [sessionStalemates, setSessionStalemates] = useState(0)  
-
-
   useEffect(()=>{
     
-    if (score === "win"){setSessionWins(sessionWins+1)}
-    if (score === "loss"){setSessionLosses(sessionLosses+1)}
-    if (score === "stalemate"){setSessionStalemates(sessionStalemates+1)}
-    if (score === "win" | "loss" | "stalemate"){setSessionGames(sessionGames+1)}
+    if (score === "win"){setSessionWins(sessionWins+1); setSessionGames(sessionGames+1)}
+    if (score === "loss"){setSessionLosses(sessionLosses+1); setSessionGames(sessionGames+1)}
+    if (score === "stalemate"){setSessionStalemates(sessionStalemates+1); setSessionGames(sessionGames+1)}
     
   },[score])
 
-  
-
-
-//const globalPromiseRejectionHandler = (event) => {
-  //console.log("Unhandled promise rejection reason: ", event.reason);
-//}
-
-//window.onunhandledrejection = globalPromiseRejectionHandler;
-
-
-  //   window.onunhandledrejection = function(e) {
-  //   e.preventDefault()
-  //   console.log(e.reason);
-  //   setAddress("0186ac6f83c5bcca34f68ea7cc82f3917ccc10ad3eac96d5ad2b1dbeb0b6c02fa9")
-  // }
-
-
-  // window.addEventListener("signer:locked", (msg) => {
-  //       console.log("locked");
-      
-  // });
 
  //set html values
  useEffect(()=>{ 
@@ -154,6 +186,7 @@ function App() {
             setStalemates(parseInt(response.data.hex, 16));            
          }
           )
+         setIsConnected(Signer.isConnected())
 
 
         }
@@ -167,13 +200,18 @@ ModalService.hasNft = (nftBalance)
   async function connect() {
     try {
       Signer.sendConnectionRequest().then(console.log("connect"));
+      setIsConnected(true)
+      
     } catch (error) {
       console.log(error);
     }
+    
   }
   async function disconnect() {
     try {
       Signer.disconnectFromSite().then(console.log("disconnect"));
+      setIsConnected(false)
+      
     } catch (error) {
       console.log(error);
     }
@@ -303,9 +341,11 @@ axios.get("http://localhost:6100/getDeploy", { //Sends request to /getDeploy end
           <ul className="navbar-nav me-auto">
             <Layout />
             <li className="nav-item">
-              <a className="nav-link" id="connectBtn" onClick={() => connect()}>
-                Connect
-              </a>
+             {isConnected ? <a className="nav-link" id="connectBtn" onClick={disconnect}>
+                Disconnect
+              </a>:<a className="nav-link" id="connectBtn" onClick={connect}>
+                 Connect
+              </a>}
             </li>
             <li className="nav-item">
               <a className="nav-link" id="deployBtn" onClick={() => deploy()}>
@@ -338,7 +378,29 @@ axios.get("http://localhost:6100/getDeploy", { //Sends request to /getDeploy end
         <Route path="/" element={<Layout />} />
         <Route index element={<Home />} />
         <Route path="/About" element={<About />} />
-        <Route path="/Game" element={<Game gametoapp={gametoapp}/>} />
+        <Route path="/Game" element={<Game 
+        gametoapp={gametoapp} 
+        address={address} 
+        socket={socket} 
+        messages={messages} 
+        setMessages={setMessages}
+        message={message}
+        setMessage={setMessage}
+        activeLobby={activeLobby}
+        setActiveLobby={setActiveLobby}
+        publicKey={address}
+        allUsers={allUsers}
+        connectedRooms={connectedRooms}
+        setConnectedRooms={setConnectedRooms}
+        lobbyList={lobbyList}
+        gameList={gameList}
+        setGameList={setGameList}
+        setInGame={setInGame}
+        inGame={inGame}
+        currentGame={currentGame}
+        setCurrentGame={setCurrentGame}
+
+        />} />
         <Route path="*" element={<Nopage />} />
       </Routes>
       <Outlet />
@@ -350,3 +412,19 @@ function csprToMotes(cspr) {
 }
 
 export default App;
+
+
+// useEffect(()=>{
+//   ModalService.nftBalance = nftBalance;
+//   ModalService.address = address;
+//   ModalService.balance = balance;
+//   ModalService.total_games = total_games;
+//   ModalService.wins = wins;
+//   ModalService.losses = losses;
+//   ModalService.stalemates = stalemates;
+//   ModalService.sessionGames = sessionGames;
+//   ModalService.sessionWins = sessionWins;
+//   ModalService.sessionLosses = sessionLosses;
+//   ModalService.sessionStalemates = sessionStalemates;
+
+// },[address, balance, total_games, wins, losses, stalemates, sessionGames, sessionWins, sessionLosses, sessionStalemates, nftBalance])

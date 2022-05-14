@@ -1,5 +1,274 @@
 
 
+#joinLobby{
+
+}
+#joinLobby:hover{
+  color: rgb(228, 225, 225);
+  background-color: #2a2c2e;
+
+}
+#lobbyBar{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin: 10px;
+}
+/*dashboard stuff*/
+#dashboard{
+  width: 100%;
+  height: 100vh;
+  display:block;
+
+  
+}
+#dashboard-top{
+  display: flex;
+  flex-direction: row;
+  column-count: 3;
+  column-gap: 5px;
+  margin: 5px;
+  
+
+}
+#dashboard-bottom{
+display: flex;
+flex-direction: column;
+margin: 5px;
+}
+#dashboard-chat{ /*inside dashboard-top*/
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  height: 400px;
+  border: 4px solid #5c370d;
+    background-image: linear-gradient(to bottom right, #5c370d, #f0d9b5);
+    color: black;
+
+}
+#lobby-select{
+  width: 100%;
+}
+#messages{ /*inside dashboard-chat*/
+ width: 100%;
+ height: 90%;
+ border: 2px solid black;
+ display: flex;
+ flex-direction: column;
+ overflow-y: scroll;
+ row-gap: 10px;
+ 
+}
+.message{
+  width: 100%;
+  height: 30px, fit-content;
+  overflow-wrap: break-word;
+  border: 2px solid #1f1102;
+  background-image: linear-gradient(to bottom, #615649, #3b3b3b);
+  color: rgb(179, 174, 174);
+}
+#message-form{/*inside dashboard-chat*/
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 10%;
+
+}
+#message-input{ /*inside message*/
+  width: 100%;
+  height: 100%;
+
+}
+#btn-send-chat{ /*inside message*/
+  width: 10%;
+  height: 100%;
+
+}
+#dashboard-view-avatar{/*inside dashboard-top*/
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  height: 400px;
+  border: 4px solid #5c370d;
+    background-image: linear-gradient(to bottom right, #5c370d, #f0d9b5);
+    color: black;
+}
+      #view-avatar-tabs{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+      .btn-tab-fit{
+        width: 100%;
+      }
+      #lobby-selection-display{
+        width: 100%;
+        height: 100%;
+        padding: 2px;
+        display: flex;
+        flex-direction: column;
+        row-gap: 3px;     
+      }
+        
+        .lobby-items{
+          cursor: pointer;
+          list-style: none;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          border: 2px solid black;
+          
+        }
+        .lobby-items:hover{
+          background-color: #80634b;
+        
+        }
+        #add-lobby{
+          display: flex;
+          width: 100%;
+          justify-content: center;
+        }
+        #add-lobby-display{
+          display: flex;
+          width: 100%;
+          height: 100%;
+          justify-content:baseline;
+          flex-direction: column;
+          row-gap: 4px;
+        }
+          .channels{
+            display: flex;
+            padding: 4px;
+            width: 100%;
+            height: 100%;
+            justify-content:baseline;
+            flex-direction: column;
+            row-gap: 4px;
+            overflow-y: scroll;
+            border-top: 4px solid black;
+          }
+          #create-channel{
+            display: flex;
+            justify-content: center;
+            width: 100%;
+          }
+          #new-channel{
+            display: flex;
+            width: 100%;
+            
+          }
+      #avatar-display{
+        width: 100%;
+        height: 100%;
+      }
+
+
+
+#dashboard-lobbies{ /*inside dashboard-top*/
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  height: 400px;
+  border: 4px solid #5c370d;
+    background-image: linear-gradient(to bottom right, #5c370d, #f0d9b5);
+    color: black;
+
+}
+    #create-game{
+      display: flex;
+      flex-direction: column;
+      row-gap: 5px;
+    }
+    #join-game{
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      padding: 2px;
+
+    }
+       #join-game-inputs{
+        display: flex;
+        flex-direction: row;
+        columns: 2;
+        column-gap: 3px;
+        justify-content: space-evenly;
+       }
+       .join-input{
+         width: 50%;
+         height: 2em;
+         border: 2px solid black;
+       }
+    #join-game-selection{
+      width: 100%;
+      height: 100%;
+      padding: 3px;
+      display: flex;
+      flex-direction: row;
+      column-gap: 3px;
+      justify-content: space-evenly;
+      
+
+    }
+       #open-games{
+         display: flex;
+         flex-direction: column;
+         row-gap: 2px;
+         width: 50%;
+         height: 100%;
+         border: 2px solid black;
+         overflow-y: scroll;
+       }
+       #selected-game{
+         display: flex;
+         width: 50%;
+         height: 100%;
+         border: 2px solid black;
+       }
+
+    #leaderboard{
+      width: 100%;
+      height: 100%;
+      border: 2px solid black;
+    }
+#dashboard-avatars{ /*inside dashboard-bottom*/
+  display: flex;
+  flex-direction: row;
+  column-gap: 10px;
+  justify-content:flex-start;
+  width: 100%;
+  height: 130px;
+  padding: 5px, 5px, 5px, 5px;
+  border: 4px solid #5c370d;
+  background-image: linear-gradient(to bottom right, #5c370d, #f0d9b5);
+  color: black;
+  overflow-x: scroll;
+
+}
+.avatar{ /*individual avatar display in dashboard-avatars and dashboard-view-avatar*/
+  display: block;
+  width: 80px;
+  height: 95%;
+  border: 2px solid black;
+  background-image: linear-gradient(to bottom right,black, #5c370d, #9e7637);
+  overflow-wrap:break-word;
+  
+
+}
+
+/*********/
+#PlayerColor{
+
+}
+#PlayerTurn{
+  
+}
+#joinCancelFooter{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
 #connectBtn{
  
  cursor: pointer;
@@ -4321,6 +4590,7 @@ fieldset:disabled .btn {
   color: #fff;
   text-decoration: none;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  cursor: pointer;
 }
 
 @media (prefers-reduced-motion: reduce) {

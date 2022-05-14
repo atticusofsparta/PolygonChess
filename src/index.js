@@ -3,11 +3,14 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from 'react-router-dom';
+import io from 'socket.io-client';
+const socket = io("http://localhost:6100")
+
 
 ReactDOM.render(
   <React.StrictMode>
    <BrowserRouter>
-        <App />
+   <App socket={socket}/>
       </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
