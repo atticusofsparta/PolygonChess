@@ -4729,6 +4729,7 @@ fieldset:disabled .btn {
   padding-left: 0;
   margin-bottom: 0;
   list-style: none;
+  z-index: 1001;
 }
 
 .navbar-nav .nav-link {
@@ -12162,4 +12163,7 @@ legend {
 
 .list-group-item-action:hover {
   background-color: #23272b;
+}
+.superHigh{
+  z-index: 1001;
 }
