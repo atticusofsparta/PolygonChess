@@ -1,23 +1,8 @@
-import {
-  CasperClient,
-  CasperServiceByJsonRPC,
-  CLPublicKey,
-  CLValueBuilder,
-  isConnected,
-  Signer,
-  Contracts,
-  DeployUtil,
-  decodeBase16,
-  RuntimeArgs,
-  CLString,
-  CLValue,
-  CLList,
-  CLMap,
-  CLU256,
-  CLKey,
-  CLByteArray
-} from "casper-js-sdk";
-import React, { useEffect, useState } from "react";
+import Web3 from 'web3';
+import PolyChessNftAbi from './polychessnftabi'
+import { useWeb3React } from "@web3-react/core";
+import { injected } from "./components/connectors";
+import React, { useEffect, useState, useRef } from "react";
 import { Routes, Route, Link, Outlet } from "react-router-dom";
 import "./style.css";
 import Home from "./pages/Home";
@@ -25,20 +10,13 @@ import About from "./pages/About";
 import Nopage from "./pages/Nopage";
 import Game from "./pages/Game";
 import Layout from "./pages/Layout";
-import axios from "axios";
+import Settings from "./pages/Settings";
 import ModalRoot from "./modules/modals/modal components/ModalRoot";
 import ModalService from "./modules/modals/modal components/ModalService";
 import immer from "immer";
 
-var getDeployInterval = null;
-
-
-const apiUrl = "http://localhost:6100/api";
-const client = new CasperClient(apiUrl);
-const contract = new Contracts.Contract(client);
-const nftcontracthash = "hash-ec5deac7aa9f869c22d5628f1082a545d98daa6ef6289f414d655d77f4ff3e77";
-const singleplayer_contract = "hash-6f978f1bd5d7071d464fa3c4fe72f5c4d7aedbad6b558402ccf5d7aecbfd915b";
-
+const web3 = new Web3(Web3.givenProvider||"https://matic-mumbai.chainstacklabs.com");
+const nftContract = new web3.eth.Contract(PolyChessNftAbi,"0xE4f8B49A58F0ab28d268E3D38B30A91FBCfcED8E");
 let initialCurrentGameState = {
           Name: '',
           Chat: '',
@@ -50,15 +28,17 @@ let initialCurrentGameState = {
 }
 
 function App({socket}) {
+  const { active, account, library, connector, activate, deactivate } =
+  useWeb3React();
 
     //connected account details
     const [balance, setBalance] = useState("?");
     const [address, setAddress] = useState("?");
-    const [isConnected, setIsConnected] = useState(false);
-  
- 
-   //account game detals
+    
+ //account game detals
    const [nftBalance, setNftBalance] = useState(0);
+   const [newNftToMint, setNewNftToMint] = useState({name:"", ipfsUrl:""});
+   const [nfts, setNfts] = useState();
    const [total_games, setTotal_Games] = useState(0);
    const [wins, setWins] = useState(0);
    const [losses, setLosses] = useState(0);
@@ -73,44 +53,93 @@ function App({socket}) {
   ///socket stuff
   const [username, setUsername] = useState(''); // user settable username
   const [connected, setConnected] = useState(false);
-  const [allUsers, setAllUsers] = useState([]); // all users on server
+
+
+  const [allUsers, setAllUsers] = useState([]) //all users on server
+    const [newUsers, setNewUsers] = useState([]) //socket var that triggers setAllUsers
   const [gameList, setGameList] = useState({}); // all games on server
+    const [newGameList, setNewGameList] = useState({});//socket var that triggers setGameList
   const [lobbyList, setLobbyList] = useState(["General"]); // all lobbies on server
+    const [newLobbyList, setNewLobbyList] = useState(["General"]);//socket var that triggers setLobbyList
+
+
   const [connectedRooms, setConnectedRooms] = useState(["General"]); // lobbies user has connected to
   const [activeLobby, setActiveLobby] = useState('General'); // current lobby user is in
   const [inGame, setInGame] = useState(false); // conditional for rendering chessboard or dashboard
   const [currentGame, setCurrentGame] = useState(initialCurrentGameState) // sets data for current game user is in
+    const [newOpponent, setNewOpponent] = useState(); //socket var that triggers setCurrentGame
   const [message, setMessage] = useState(''); // message input state
   const [messages, setMessages] = useState({General: [], Spanish: []}); // all messages from server
+    const [newMessages, setNewMessages] = useState({})
  
 
-
-
-socket.on('user list', users =>{
-  setAllUsers(users)
-})
-socket.on('lobby list', lobbies => {
-  setLobbyList(lobbies)
-})
-socket.on('game list', games => {
-  
-  setGameList(games)
-  console.log("game list: ", gameList)
-})
-socket.on('start game', (opponent) => {
-  let newopponent = immer(currentGame, draft => {
-    draft.opponentSocket = opponent;
-  })
-  setCurrentGame(newopponent)
-  console.log(opponent, "is black")
-})
-
 useEffect(()=>{
-  socket.emit('join server', address)
+  if(allUsers.map((user, index) => user.socket).includes(socket.id) === false){socket.emit("join server", address)}
+  if(allUsers.map((user, index) => user.publicKey).includes(address) === false){socket.emit("join server", address)}
+  console.log("includes?? ", allUsers.map((user, index) => user.socket))
+
 },[address])
+
+  socket.on('user list', (users) =>{
+    setNewUsers(users);   
+  })
+  useEffect(() => {
+    setAllUsers(newUsers); 
+    socket.off('user list'); // clear listener
+    console.log(socket.listeners('user list'))
+  },[newUsers])
+
+socket.on('lobby list', lobbies => {
+  setNewLobbyList(lobbies)
+})
+useEffect(() => {
+  setLobbyList(newLobbyList); 
+  socket.off('lobby list'); // clear listener
+},[newLobbyList])
+
+socket.on('game list', games => {
+  setGameList(games)
+})
+useEffect(() => {
+  setGameList(newGameList); 
+  socket.off('game list'); // clear listener
+},[newGameList])
+
+socket.on("new message", (newmsg) => {
+  setNewMessages(newmsg)
+}) 
+useEffect(()=>{
+  console.log('new message from server')
+  let newmsg = immer(messages, draft => {
+      draft[activeLobby].push(newMessages)
+  })
+  setMessages(newmsg)
+  socket.off("new message")
+},[newMessages])
+
+
+socket.on('start game', (opponent) => {
+  setNewOpponent(opponent)
+  if (currentGame.opponentSocket !== '') {setInGame(true)}
+})
+const roomJoinCallback = (lobby, incomingmessages) => {
+  let newMessages = immer(messages, draft => {
+      draft[lobby] = incomingmessages
+  })
+  setMessages(newMessages)
+  setActiveLobby(lobby)
+}
+useEffect(()=>{
+  socket.emit('join room', currentGame.Chat, (incomingmessages) => {roomJoinCallback(currentGame.Chat, incomingmessages)})
+  let opponent = immer(currentGame, draft => {
+    draft.opponentSocket = newOpponent;
+  })
+  setCurrentGame(opponent)
+  console.log(currentGame, "is black")
+  socket.off('start game')
+},[newOpponent])
+
   
-
-
   const [score, setScore] = useState();
   let gametoapp = (gameResult) => {
     
@@ -123,11 +152,9 @@ useEffect(()=>{
 
   }
   useEffect(()=>{
-    
     if (score === "win"){setSessionWins(sessionWins+1); setSessionGames(sessionGames+1)}
     if (score === "loss"){setSessionLosses(sessionLosses+1); setSessionGames(sessionGames+1)}
     if (score === "stalemate"){setSessionStalemates(sessionStalemates+1); setSessionGames(sessionGames+1)}
-    
   },[score])
 
 
@@ -141,192 +168,50 @@ useEffect(()=>{
   const textLosses = document.getElementById('textLosses');
   const textStalemates = document.getElementById('textStalemates');
   textNft.textContent = `Nft: ${nftBalance}`;
-  textAddress.textContent = `Connected account: ${address.replace(address.slice(5, 61), ' . . . ')}`;
+  if(active === true){ setAddress(account); }
+  textAddress.textContent = `Connected account: ${address.replace(address.slice(5, 37), ' . . . ')}`;
   textBalance.textContent = `CSPR Balance: ${balance / 1000000000}`;
   textTotal_Games.textContent = `Total Games: ${total_games}` + ` + ${sessionGames}`;
   textWins.textContent = `Wins: ${wins}` + ` + ${sessionWins}`;
   textLosses.textContent = `Losses: ${losses}` + ` + ${sessionLosses}`;
   textStalemates.textContent = `Stalemates: ${stalemates}` + ` + ${sessionStalemates}`;
-},[address, balance, total_games, wins, losses, stalemates, sessionGames, sessionWins, sessionLosses, sessionStalemates, nftBalance])
+},[address, active, balance, total_games, wins, losses, stalemates, sessionGames, sessionWins, sessionLosses, sessionStalemates, nftBalance])
 
 
- //get  account data from server
- useEffect(()=>{
-  async function AccountInfo(){
-    const publicKey = await window.casperlabsHelper.getActivePublicKey();
-          setAddress(publicKey);
-         axios.post('http://localhost:6100/balance', {"publicKey": publicKey}).then((response) => {
-           const bal = response.data;
-           setBalance(bal)
-           console.log(bal)
-         }
-         )
-         axios.get('http://localhost:6100/get_nft_balance', {params: {
-          publicKey: publicKey}}).then((response) => {
-            setNftBalance(parseInt(response.data.hex, 16))   
-         }
-         )
-         axios.get('http://localhost:6100/get_total_games', {params: {
-          publicKey: publicKey}}).then((response) => {
-            setTotal_Games(parseInt(response.data.hex, 16))   
-         }
-         )
-         axios.get('http://localhost:6100/get_wins', {params: {
-          publicKey: publicKey}}).then((response) => {
-            setWins(parseInt(response.data.hex, 16));            
-         }
-         )
-         axios.get('http://localhost:6100/get_losses', {params: {
-          publicKey: publicKey}}).then((response) => {
-            setLosses(parseInt(response.data.hex, 16));            
-         }
-         )
-         axios.get('http://localhost:6100/get_stalemates', {params: {
-          publicKey: publicKey}}).then((response) => {
-            setStalemates(parseInt(response.data.hex, 16));            
-         }
-          )
-         setIsConnected(Signer.isConnected())
 
-
-        }
-  var accountinfoint = setInterval(AccountInfo, 10000)
-  return accountinfoint;
-},[])
 
 ModalService.hasNft = (nftBalance)
+async function SetNftData () {
+  if (web3.utils.isAddress(address) === true){
+    nftContract.defaultAccount = address;
+  };
+  if(active & web3.utils.isAddress(address) === true ){
+    const newnftbal = await nftContract.methods.balanceOf(address).call()
+    setNftBalance(newnftbal)
+   }
+  }
+useEffect(()=>{SetNftData()},[active])
 
 
-  async function connect() {
-    try {
-      Signer.sendConnectionRequest().then(console.log("connect"));
-      setIsConnected(true)
-      
-    } catch (error) {
-      console.log(error);
-    }
-    
-  }
-  async function disconnect() {
-    try {
-      Signer.disconnectFromSite().then(console.log("disconnect"));
-      setIsConnected(false)
-      
-    } catch (error) {
-      console.log(error);
-    }
-  }
+async function connect(){
+  //connect wallet
+  try {activate(injected);} 
+  catch (error) {console.log(error)}
+
+}
+async function disconnect(){
+  try {deactivate();} 
+  catch (error) {console.log(error)}
+    setAddress("?")
+}
   async function mint() {
-    const recipientKey = CLPublicKey.fromHex(address);
-    const token_ids = new CLList([new CLU256(1)]);
-    const token_meta1 = new CLMap([[new CLString("a"), new CLString("aa")]]);
-    const token_metas = new CLList([token_meta1]);
-    
-    const args =  RuntimeArgs.fromMap({
-      recipient: new CLKey(
-        new CLByteArray(new Uint8Array(recipientKey.toAccountHash()))
-      ),
-      token_ids: token_ids,
-      token_metas: token_metas,
-    }); 
-  
-    const pubkey = CLPublicKey.fromHex(address); //Build CLPublicKey from hex representation of public key
-     contract.setContractHash(nftcontracthash); //Sets the contract hash of the Contract instance. The hash of our highscore contract
-     const result = contract.callEntrypoint("mint", args, pubkey, "casper-test", csprToMotes(3).toString(), [], 30000000); //Builds a Deploy object at add_highscore entrypoint
-     const deployJSON = DeployUtil.deployToJson(result);
-     Signer.sign(deployJSON, address).then((success) => { //Initiates sign request
-     sendDeploy(success);
-   }).catch((error) => {
-     console.log(error);
-     console.log(args)
-   });
+    try {
+      nftContract.methods.mintNFT(address, newNftToMint.ipfsUrl).send({from: address})
+      }
+    catch (error) {console.log(error)}
+    console.log("mint a thing")
   }
 
- //save button
- async function deploy() {
-
-  let totalGamesArg = total_games + sessionGames;
-  let winsArg = wins + sessionWins;
-  let lossesArg = losses + sessionLosses;
-  let stalematesArg = stalemates + sessionStalemates;
-  const args = RuntimeArgs.fromMap({ //Need to build a UInt512 CLValue and package into RuntimeArgs
-    "new_total_games":CLValueBuilder.u512(totalGamesArg),
-    "new_wins":CLValueBuilder.u512(winsArg),
-    "new_losses":CLValueBuilder.u512(lossesArg),
-    "new_stalemates":CLValueBuilder.u512(stalematesArg)       
-   }); 
-
-  const pubkey = CLPublicKey.fromHex(address); //Build CLPublicKey from hex representation of public key
-   contract.setContractHash(singleplayer_contract); //Sets the contract hash of the Contract instance. The hash of our highscore contract
-   const result = contract.callEntrypoint("add_game", args, pubkey, "casper-test", csprToMotes(1).toString(), [], 10000000); //Builds a Deploy object at add_highscore entrypoint
-   const deployJSON = DeployUtil.deployToJson(result);
-   Signer.sign(deployJSON, address).then((success) => { //Initiates sign request
-   sendDeploy(success);
- }).catch((error) => {
-   console.log(error);
-   console.log(args)
- });
-}
-async function sendDeploy(signedDeployJSON) {
-axios.post("http://localhost:6100/sendDeploy", signedDeployJSON, { //Sends request to /sendDeploy endpoint in server.js. Need to send deployment from the backend do to CORS policy.
-  headers: {
-    'Content-Type': 'application/json'
-  }
-}).then((response) => {
-  const hash = response.data;
-  //updateStatus("Deployed. <a target='_blank' href='https://testnet.cspr.live/deploy/" + hash + "'>View on cspr.live</a>");
-  initiateGetDeployProcedure(hash);
-}).catch((error) => {
-  alert(error);
-});
-}
-async function initiateGetDeployProcedure(hash) {
-getDeploy(hash);
-getDeployInterval = setInterval(() => { //We call this every 5 seconds to check on the status of the deploy
-  getDeploy(hash);
-}, 5000);
-}
-async function getDeploy(deployHash) {
-axios.get("http://localhost:6100/getDeploy", { //Sends request to /getDeploy endpoint in server.js.
-  params: {
-    hash: deployHash,
-  }
-}, {
-  headers: {
-    'Content-Type': 'application/json'
-  }
-}).then((response) => {
-  //response.data[0] == execution_results {...}
-  if (response.data.length == 0) { //See if there's return data yet
-    console.log("No return data yet");
-    return;
-  }
-  const executionResults = response.data[0];
-  if (!executionResults.hasOwnProperty("result")) { //If executionResults doesn't contain the result key the deployment hasn't been executed by the node
-    console.log("Doesnt have result yet");
-    return;
-  }
-  const result = executionResults.result; //Get the result
-  console.log(response.data);
-  if (result.hasOwnProperty("Success")) { //Deployment succeeded!
-    console.log("Success!");
-     setSessionGames(0);
-     setSessionWins(0);
-     setSessionLosses(0);
-     setSessionStalemates(0);
-    console.log("Execution Successful")
-  } else if (result.hasOwnProperty("Failure")) {
-    console.log("Execution Failure");
-  } else {
-    console.log("Unknown Error");
-  }
-  clearInterval(getDeployInterval); //Stop polling getDeploy
-
-}).catch((error) => {
-  alert(error);
-  clearInterval(getDeployInterval); //Stop polling getDeploy
-});
-}
 
   return (
    
@@ -341,16 +226,11 @@ axios.get("http://localhost:6100/getDeploy", { //Sends request to /getDeploy end
           <ul className="navbar-nav me-auto">
             <Layout />
             <li className="nav-item">
-             {isConnected ? <a className="nav-link" id="connectBtn" onClick={disconnect}>
+             {active ? <a className="nav-link" id="connectBtn" onClick={disconnect}>
                 Disconnect
               </a>:<a className="nav-link" id="connectBtn" onClick={connect}>
                  Connect
               </a>}
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" id="deployBtn" onClick={() => deploy()}>
-                Save
-              </a>
             </li>
             <li className="nav-item">
               <a className="nav-link" id="mintBtn" onClick={() => mint()}>
@@ -399,17 +279,29 @@ axios.get("http://localhost:6100/getDeploy", { //Sends request to /getDeploy end
         inGame={inGame}
         currentGame={currentGame}
         setCurrentGame={setCurrentGame}
+        initialCurrentGameState={initialCurrentGameState}
+        active={active}
+        connect={connect}
+        mint={mint}
+        nftBalance={nftBalance}
+        SetNftData={SetNftData()}
+        newNftToMint={newNftToMint}
+        setNewNftToMint={setNewNftToMint}
+
 
         />} />
         <Route path="*" element={<Nopage />} />
+        <Route path='/Settings' element={<Settings 
+        nftContract={nftContract} 
+        web3={web3}
+        address={address}
+        />} />
       </Routes>
       <Outlet />
     </div>
   );
 }
-function csprToMotes(cspr) {
-  return cspr * 10**9;
-}
+
 
 export default App;
 

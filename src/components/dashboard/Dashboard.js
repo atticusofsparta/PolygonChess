@@ -6,7 +6,7 @@ import DashboardAvatar from "./DashboardAvatars";
 import DashboardViewAvatar from "./DashboardViewAvatar";
 
 
-const Dashboard = ({ socket, messages, setMessages, activeLobby, setActiveLobby, message, setMessage, publicKey, allUsers,connectedRooms,setConnectedRooms, lobbyList, gameList, setGameList, setInGame, setCurrentGame }) => {
+const Dashboard = ({ socket, messages, setMessages, activeLobby, setActiveLobby, message, setMessage, publicKey, allUsers,connectedRooms,setConnectedRooms, lobbyList, gameList, setGameList, setInGame, setCurrentGame, currentGame, initialCurrentGameState }) => {
    
     return(
         <div id="dashboard">
@@ -37,6 +37,9 @@ const Dashboard = ({ socket, messages, setMessages, activeLobby, setActiveLobby,
             messages={messages}
             setMessages={setMessages}
             setCurrentGame={setCurrentGame}
+            setActiveLobby={setActiveLobby}
+            currentGame={currentGame}
+            initialCurrentGameState={initialCurrentGameState}
             />
             </div>
             <div id="dashboard-bottom"> 

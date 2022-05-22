@@ -27,13 +27,6 @@ const DashboardChat = ({socket, activeLobby, messages, setMessages, message, set
         setMessage('')
         
     }
-    socket.on("new message", (newmsg) => {
-        let newMessages = immer(messages, draft => {
-            draft[activeLobby].push(newmsg)
-        })
-        setMessages(newMessages)
-        
-    }) 
 
     useEffect(()=>{
         var objDiv = document.getElementById("messages");

@@ -1,14 +1,21 @@
-priority:
-    deploy smart contract
-    create endpoints in server for saving to smart contract
-    create a transaction builder in app
-        - save user moves as a fen string on each move to session storage, as well as move-log
-        - save wins/losses/stalemates and add them up for total games
-        - 
+    move all socket.on's to the app.js file
+    add account-info nfts. Each nft can be leveled up 101 times. When created, nft is given account
+        info. Meaning, username, contact info, all app preferences. When the user connects to thier
+        wallet, the nft is read and all the session data set.
+    add feature locking that is unlocked by nfts with x-level. Features to be locked include:
+        custom channels (default only to start);
+        in-game chat;
+        custom username (unlocked at level 1 when nft is first minted);
+        custom boards and click-to-move boards;
+        nft-market place;
 
-    add redis database session storage
+
+
+    add redis database session storage so if server restarts it retains data
+    
     add node-finder middleware to express server to select the best/functioning node  
-        --use CasperServiceByJsonRPC(getPeers)
+        --use CasperServiceByJsonRPC(getPeers) on a 5 min timer
+    
 
 
 

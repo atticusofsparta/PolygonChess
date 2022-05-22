@@ -1,7 +1,7 @@
 import immer from "immer";
 import { useEffect, useState } from "react";
 
-const DashboardLobbies = ({socket, setInGame, gameList, setGameList, messages, setMessages, setCurrentGame}) => {
+const DashboardLobbies = ({socket, setInGame, gameList, setGameList, messages, setMessages, setCurrentGame, currentGame, setActiveLobby, initialCurrentGameState}) => {
 
   const [activeTab, setActiveTab] = useState('join');
   const [selectedName, setSelectedName] = useState('')
@@ -27,8 +27,7 @@ const DashboardLobbies = ({socket, setInGame, gameList, setGameList, messages, s
     }
     socket.emit('create game', payload)
     let gameID = "gameID:"+socket.id;
-    socket.emit('join room', gameID, (incomingmessages) => {roomJoinCallback(gameID, incomingmessages)});
-    setInGame(true)
+    socket.emit('join room', gameID,(incomingmessages) => {roomJoinCallback(gameID, incomingmessages)})
     if (password === '') {
         let newGame = immer(gameList, draft => {
             draft[gameName] = {
@@ -64,16 +63,16 @@ const DashboardLobbies = ({socket, setInGame, gameList, setGameList, messages, s
           playerColor: 'white',
           opponentSocket: '',
           opponentColor: 'black'
-          
       })
+      setActiveTab('loading')
   }
+
+
   async function roomJoinCallback(lobby, incomingmessages) {
     let newMessages = immer(messages, draft => {
         draft[lobby] = incomingmessages
     })
     setMessages(newMessages)
-    
-    
 }
 
   const joinGame = () => {
@@ -88,6 +87,7 @@ const DashboardLobbies = ({socket, setInGame, gameList, setGameList, messages, s
       socket.emit('join room', newroomname,(incomingmessages) => {roomJoinCallback(newroomname, incomingmessages)})
       socket.emit('start game', opponent, joinGameName)
       setInGame(true)
+      setActiveLobby(newroomname);
       setCurrentGame({
         Name: joinGameName,
         Chat: newroomname,
@@ -105,6 +105,18 @@ const DashboardLobbies = ({socket, setInGame, gameList, setGameList, messages, s
     setJoinGameName(game)
     setJoinGamePass(gameList[game].Password)
   }
+  const CancelGame = () => {
+      console.log(currentGame)
+      socket.emit('cancel game', currentGame.Name);
+      setActiveTab('create');
+      const cancelled = immer(gameList, draft => {
+          delete draft[currentGame.Name]
+      })
+      setGameList(cancelled);
+      setCurrentGame(initialCurrentGameState);
+
+  }
+  
   
   
 
@@ -114,7 +126,7 @@ const DashboardLobbies = ({socket, setInGame, gameList, setGameList, messages, s
 
         <ul className="nav nav-tabs">
             <li className="nav-item">
-                <a className="nav-link" data-bs-toggle="tab" onClick={() => setActiveTab('create')}>Create</a>
+                <a className="nav-link" data-bs-toggle="tab" onClick={() => setActiveTab(() => {if(currentGame === initialCurrentGameState){return 'create'}; if(currentGame !== initialCurrentGameState){return 'loading'}})}>Create</a>
             </li>
             <li className="nav-item">
                 <a className="nav-link" data-bs-toggle="tab" onClick={() => setActiveTab('join')}>Join</a>
@@ -136,6 +148,12 @@ const DashboardLobbies = ({socket, setInGame, gameList, setGameList, messages, s
              <input id='turn-timer' type='number' placeholder='0' max={15} min={0} onChange={(e)=>{setTurnTimer(e.target.value)}}/>
              <button id='create-game-btn' onClick={createGame}>Create</button>
              </div>}
+
+             {activeTab === 'loading' && <div id="loading">
+                 <div className="loader">Loading...</div>
+                 <span className="center-content">Waiting for black to join... </span>
+                 <span className="center-content"><button className="center-content" onClick={() => {CancelGame()}}>Cancel</button></span>
+                 </div>}
 
 
          {activeTab === 'join' && <div id='join-game'>

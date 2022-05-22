@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Avatar from "./Avatar";
 import immer from 'immer';
-import { connect } from "socket.io-client";
+
 
 
 const DashboardViewAvatar = ({socket, messages, setMessages, setActiveLobby, connectedRooms, setConnectedRooms, lobbyList }) => {
