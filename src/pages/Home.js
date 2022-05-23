@@ -10,7 +10,7 @@ const Home = () => {
     CloseModal()
   return (
     <div>
-      <header>Welcome to Casper Chess</header>
+      <header>Welcome to Polygon Chess</header>
       <h3>
         The only chess game that lets you save your win to the blockchain, so
         you can brag forever
@@ -20,7 +20,8 @@ const Home = () => {
           <div className="largeText">HOW IT WORKS:</div>
           <div>
             <ol>
-              <li>Connect your Casper wallet</li>
+              <li>Connect your Metamask wallet</li>
+              <li>Navigate to the Game tab and mint an nft</li>
               <li>
                 Match with other players in the "Game" tab for a round of chess
               </li>
@@ -34,22 +35,7 @@ const Home = () => {
             </ol>
           </div>
         </div>
-        <div className="noCasper">
-          <div className="largeText">Dont have a Casper account?</div><ol>
-          <li>
-            Download the Casper Signer extension{" "}
-            <a href={wallet} target="_blank" rel="noopener noreferrer" alt="">
-              here
-            </a>
-          </li>
-          <li>Set a new password to create a Vault</li>
-          <li>Then you can choose the "Create Account" option</li>
-          <li>Set your name and then choose "ED25519" as the Algorithm</li>
-          <li>
-            Dont forget to download your secret key so you can recover your
-            account if you forget your password
-          </li></ol>
-        </div>
+       
       </div>
       <div className="chessRulesContainer">
         <div className="largeText">How to play chess</div>

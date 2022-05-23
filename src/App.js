@@ -162,7 +162,7 @@ useEffect(()=>{
  useEffect(()=>{ 
   const textNft = document.getElementById('textNft');
   const textAddress = document.getElementById('textAddress');
-  const textBalance = document.getElementById('textBalance');
+ 
   const textTotal_Games = document.getElementById('textTotal_Games');
   const textWins = document.getElementById('textWins');
   const textLosses = document.getElementById('textLosses');
@@ -170,7 +170,7 @@ useEffect(()=>{
   textNft.textContent = `Nft: ${nftBalance}`;
   if(active === true){ setAddress(account); }
   textAddress.textContent = `Connected account: ${address.replace(address.slice(5, 37), ' . . . ')}`;
-  textBalance.textContent = `CSPR Balance: ${balance / 1000000000}`;
+  
   textTotal_Games.textContent = `Total Games: ${total_games}` + ` + ${sessionGames}`;
   textWins.textContent = `Wins: ${wins}` + ` + ${sessionWins}`;
   textLosses.textContent = `Losses: ${losses}` + ` + ${sessionLosses}`;
@@ -220,7 +220,7 @@ async function disconnect(){
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
           <a className="navbar-brand" href="/Home">
-            Casper Chess
+            Polygon Chess
           </a>
 
           <ul className="navbar-nav me-auto">
@@ -241,7 +241,7 @@ async function disconnect(){
 
           <ul >  
          <li id="textAddress">Connected account: </li>
-                  <li id="textBalance">CSPR Balance: </li>
+                 
                 </ul>
                 <ul>
                 <li id="textTotal_Games">Total Games: </li>

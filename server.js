@@ -48,7 +48,7 @@ io.on('connection', (socket) => {
     console.log(socket.id, " has joined ", roomName)
   }
      else { // if room does not exist, this creates the room and sends back the messages
-       messages[roomName] = [{sender:'Casper Chess', content:`You have created the "${roomName}" channel!`}];
+       messages[roomName] = [{sender:'Polygon Chess', content:`You have created the "${roomName}" channel!`}];
        socket.join(messages[roomName]);
        cb(messages[roomName]);
        console.log(`the room ${roomName} has been created`)
